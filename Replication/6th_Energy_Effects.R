@@ -136,3 +136,55 @@ visreg(Gam_Distance, "F2SocialCogAccuracy", xlab = "F2SocialCogAccuracy", ylab =
 Gam_Distance <- gam(Distance ~ s(Age_years, k = 4) + F3MemoryAccuracy + Sex_factor + HandednessV2 + MotionMeanRelRMS + TBV, method = "REML", data = Behavior_New);
 visreg(Gam_Distance, "F3MemoryAccuracy", xlab = "F3MemoryAccuracy", ylab = "Distance", gg = TRUE) + theme(text=element_text(size=20));
 
+# Correlation between energy and activation
+Activation <- readMat('/data/jux/BBL/projects/pncControlEnergy/data/subjectData/nback_2b0b_20180202.mat');
+Activation_New <- data.frame(scanid = Activation$scanid);
+Activation_New$Activation.2b0b <- Activation$Activation.2b0b;
+Activation_New$Activation_NodalAvg <- rowMeans(Activation$Activation.2b0b);
+Energy_New <- data.frame(scanid = t(Energy_Mat$scan.ID));
+Energy_New$Energy_NodalAvg <- rowMeans(Energy_Mat$Energy);
+Energy_New$Energy <- Energy_Mat$Energy;
+# The subjects' order in activation (677 subjects) is different from that of energy (949 subjects), so use merge function to make them the same
+Activation_Energy <- merge(Activation_New, Energy_New, by = "scanid");
+Behavior$scanid <- AllInfo$scanid;
+Activation_Energy <- merge(Activation_Energy, Behavior, by = "scanid");
+Activation <- Activation_Energy$Activation.2b0b;
+Activation_Abs <- abs(Activation);
+Energy <- Activation_Energy$Energy;
+# nodal correlation
+P_Activation_Energy = matrix(0, 233, 1);
+P_ActivationAbs_Energy = matrix(0, 233, 1);
+for (i in c(1:233))
+{ 
+  i
+  Gam_Activation_Energy <- gam(Activation[,i] ~ Energy[,i] + s(Age_years, k = 4) + Sex_factor + HandednessV2 + MotionMeanRelRMS + TBV, method = "REML", data = Activation_Energy);
+  P_Activation_Energy[i] <- summary(Gam_Activation_Energy)$p.table[2,4];
+  
+  Gam_Activation_Energy <- gam(Activation_Abs[,i] ~ Energy[,i] + s(Age_years, k = 4) + Sex_factor + HandednessV2 + MotionMeanRelRMS + TBV, method = "REML", data = Activation_Energy);
+  P_ActivationAbs_Energy[i] <- summary(Gam_Activation_Energy)$p.table[2,4];
+}
+P_Activation_Energy_fdr = p.adjust(P_Activation_Energy, "fdr");
+P_ActivationAbs_Energy_fdr = p.adjust(P_ActivationAbs_Energy, "fdr");
+
+# Specificity of age effect on the situation of target state of activation
+# Target: FP 1
+Energy_Mat_Path = '/data/jux/BBL/projects/pncControlEnergy/data/energyData/SC_Energy/Replication/SC_InitialAll0_TargetFP1.mat';
+Energy_Mat = readMat(Energy_Mat_Path);
+Energy <- Energy_Mat$Energy;
+WholeBrainAvg <- rowMeans(Energy);
+Gam_WholeBrainAvg <- gam(WholeBrainAvg ~ s(Age_years, k=4) + Sex_factor + HandednessV2 + MotionMeanRelRMS + TBV, method = "REML", data = Behavior);
+visreg(Gam_WholeBrainAvg, "Age_years", xlab = "Age (years)", ylab = "Whole brain average energy", gg = TRUE) + theme(text=element_text(size=20));
+# Target: Motor 1
+Energy_Mat_Path = '/data/jux/BBL/projects/pncControlEnergy/data/energyData/SC_Energy/Replication/SC_InitialAll0_TargetMotor1.mat';
+Energy_Mat = readMat(Energy_Mat_Path);
+Energy <- Energy_Mat$Energy;
+WholeBrainAvg <- rowMeans(Energy);
+Gam_WholeBrainAvg <- gam(WholeBrainAvg ~ s(Age_years, k=4) + Sex_factor + HandednessV2 + MotionMeanRelRMS + TBV, method = "REML", data = Behavior);
+visreg(Gam_WholeBrainAvg, "Age_years", xlab = "Age (years)", ylab = "Whole brain average energy", gg = TRUE) + theme(text=element_text(size=20));
+# Target: Visual 1
+Energy_Mat_Path = '/data/jux/BBL/projects/pncControlEnergy/data/energyData/SC_Energy/Replication/SC_InitialAll0_TargetVisual1.mat';
+Energy_Mat = readMat(Energy_Mat_Path);
+Energy <- Energy_Mat$Energy;
+WholeBrainAvg <- rowMeans(Energy);
+Gam_WholeBrainAvg <- gam(WholeBrainAvg ~ s(Age_years, k=4) + Sex_factor + HandednessV2 + MotionMeanRelRMS + TBV, method = "REML", data = Behavior);
+visreg(Gam_WholeBrainAvg, "Age_years", xlab = "Age (years)", ylab = "Whole brain average energy", gg = TRUE) + theme(text=element_text(size=20));
