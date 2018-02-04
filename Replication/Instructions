@@ -7,7 +7,7 @@ Run the codes according to the order:
 
 3rd_Extract_Activation.R: R code to extract average brain extraction, which will be the target state of control analysis
 
-4th_Energy_Calculation: Matlab code to calculate the the energy
+4th_Energy_Calculation: Matlab code to calculate the the control energy
     1. EnergyCal_SC_All0Initial_ActivationTarget: (Initial: all 0; Target: activation)
     2. EnergyCal_SC_All0Initial_ActivationTarget_VaryRho: (Initial: all 0; Target: activation; Rho: 0.1, 0.2, 0.5, 0.8, 2, 5, 8, 10)
     3. EnergyCal_SC_All0Initial_ActivationTarget_VaryT: (Initialal: all 0; Target: activation; T: 0.1, 0.2, 0.5, 0.8, 2, 5, 8, 10)
@@ -36,4 +36,4 @@ Run the codes according to the order:
 g_ls.m is a funtion that will be used in the Maltab scripts here.
 PSOM (http://psom.simexp-lab.org/) is used for parallelization when calculating all subjects' energy metrics.
 I recommend to set path /data/jux/BBL/projects/pncControlEnergy/scripts/MatlabToolbox/PANDA_1.3.1_64.
-g_ls.m and PSOM are included in PANDA folder.
+g_ls.m and PSOM are included in this folder.
