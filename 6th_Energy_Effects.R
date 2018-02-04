@@ -47,12 +47,11 @@ for (i in 1:RegionsQuantity)
   Energy_Gam_Age[i, c(1:2)] <- summary(Energy_Gam)$s.table[, 3:4];
 }
 Energy_Gam_Age[, 3] <- p.adjust(Energy_Gam_Age[, 2], "fdr");
-Energy_Gam_Age[, 4] <- p.adjust(Energy_Gam_Age[, 2], "bonferroni");
 ResultantFolder <- '/data/jux/BBL/projects/pncControlEnergy/results/SC_Energy/Replication/InitialAll0_TargetActivation';
 Energy_Gam_Age_CSV <- file.path(ResultantFolder, 'Energy_Gam_Age_NodalLevel.csv');
 write.csv(Energy_Gam_Age, Energy_Gam_Age_CSV);
 Energy_Gam_Age_Mat <- file.path(ResultantFolder, 'Energy_Gam_Age_NodalLevel.mat');
-writeMat(Energy_Gam_Age_Mat, Age_Z = Energy_Gam_Age[, 1], Age_P = Energy_Gam_Age[, 2], Age_P_FDR = Energy_Gam_Age[, 3], Age_P_Bonf = Energy_Gam_Age[, 4]);
+writeMat(Energy_Gam_Age_Mat, Age_Z = Energy_Gam_Age[, 1], Age_P = Energy_Gam_Age[, 2], Age_P_FDR = Energy_Gam_Age[, 3]);
 
 # Age effect of yeo system average energy
 SystemsQuantity = 8;
@@ -67,11 +66,10 @@ for (i in 1:SystemsQuantity)
   #visreg(Energy_Gam, "Age_years", xlab = "Age (years)", ylab = paste("Average energy ",RowName[i],sep=''), gg = TRUE) + theme(text=element_text(size=20));
 }
 Energy_Gam_Age_YeoAvg[, 3] <- p.adjust(Energy_Gam_Age_YeoAvg[, 2], "fdr");
-Energy_Gam_Age_YeoAvg[, 4] <- p.adjust(Energy_Gam_Age_YeoAvg[, 2], "bonferroni");
 Energy_Gam_Age_CSV <- file.path(ResultantFolder, 'Energy_Gam_Age_YeoAvg.csv');
 write.csv(Energy_Gam_Age_YeoAvg, Energy_Gam_Age_CSV);
 Energy_Gam_Age_Mat <- file.path(ResultantFolder, 'Energy_Gam_Age_YeoAvg.mat');
-writeMat(Energy_Gam_Age_Mat, Age_Z = Energy_Gam_Age_YeoAvg[, 1], Age_P = Energy_Gam_Age_YeoAvg[, 2], Age_P_FDR = Energy_Gam_Age_YeoAvg[, 3], Age_P_Bonf = Energy_Gam_Age_YeoAvg[, 4]);
+writeMat(Energy_Gam_Age_Mat, Age_Z = Energy_Gam_Age_YeoAvg[, 1], Age_P = Energy_Gam_Age_YeoAvg[, 2], Age_P_FDR = Energy_Gam_Age_YeoAvg[, 3]);
 
 # Cognition effect of energy
 NANIndex = as.matrix(which(!is.na(AllInfo$Overall_Accuracy)));
@@ -112,11 +110,10 @@ for (i in 1:RegionsQuantity)
   Energy_Gam_Cognition[i, 2] <- summary(Energy_Gam)$p.pv[2];
 }
 Energy_Gam_Cognition[, 3] <- p.adjust(Energy_Gam_Cognition[, 2], "fdr");
-Energy_Gam_Cognition[, 4] <- p.adjust(Energy_Gam_Cognition[, 2], "bonferroni");
 Energy_Gam_Cognition_CSV <- file.path(ResultantFolder, 'Energy_Gam_F1ExecCompResAccuracy.csv');
 write.csv(Energy_Gam_Cognition, Energy_Gam_Cognition_CSV);
 Energy_Gam_Cognition_Mat <- file.path(ResultantFolder, 'Energy_Gam_F1ExecCompResAccuracy.mat');
-writeMat(Energy_Gam_Cognition_Mat, Cognition_Z = Energy_Gam_Cognition[, 1], Cognition_P = Energy_Gam_Cognition[, 2], Cognition_P_FDR = Energy_Gam_Cognition[, 3], Cognition_P_Bonf = Energy_Gam_Cognition[, 4]);
+writeMat(Energy_Gam_Cognition_Mat, Cognition_Z = Energy_Gam_Cognition[, 1], Cognition_P = Energy_Gam_Cognition[, 2], Cognition_P_FDR = Energy_Gam_Cognition[, 3]);
 
 # Distance effect
 Energy_WholeBrainAvg <- rowMeans(Energy);
