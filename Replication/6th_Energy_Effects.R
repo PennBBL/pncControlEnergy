@@ -9,6 +9,14 @@ Energy_Mat = readMat(Energy_Mat_Path);
 Energy <- Energy_Mat$Energy;
 Energy_YeoAvg <- Energy_Mat$Energy.YeoAvg;
 
+# Visualize energy for each system
+Yeo_atlas <- readMat('/data/jux/BBL/projects/pncControlEnergy/data/atlas/Yeo_7system.mat');
+Energy_SubjectsAvg <- colMeans(Energy);
+tmp <- data.frame(Energy_data = Energy_SubjectsAvg, Yeo = Yeo_atlas$Yeo.7system);
+tmp$Yeo <- factor(tmp$Yeo, levels = c(1:8), labels = c("Visual","SM", "DA", "VA", "limbic","FP","DM","SC"));
+qplot(Yeo, Energy_data, data = tmp, geom=c("boxplot","jitter"), fill=Yeo, xlab="Yeo systems", ylab="Energy") + ggtitle("Initial All 0; Target activation") + theme(plot.title = element_text(hjust = 0.5));
+
+# Import behavior
 AllInfo <- read.csv('/data/jux/BBL/projects/pncControlEnergy/data/subjectData/n949_Behavior_20180202.csv');
 Behavior <- data.frame(Sex_factor = cut(AllInfo$sex, 2, labels = c("Male", "Female")));
 Behavior$Sex_order <- cut(AllInfo$sex, 2, labels = c("Male", "Female"), ordered_result = TRUE);
