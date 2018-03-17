@@ -1,5 +1,5 @@
 
-function EnergyCal_SGE_Function(ConnPathCell, T, xc, x0, xf, rho, Type, ResultantFolder)
+function EnergyCal_IndividualTarget_SGE_Function(ConnPathCell, T, xc, x0, xf_Cell, rho, Type, ResultantFolder)
 
 psom_gb_vars
 Pipeline_opt.mode = 'qsub';
@@ -21,7 +21,7 @@ for i = 1:length(ConnPathCell)
   pipeline.(Job_Name).opt.para2 = T;
   pipeline.(Job_Name).opt.para3 = xc;
   pipeline.(Job_Name).opt.para4 = x0;
-  pipeline.(Job_Name).opt.para5 = xf;
+  pipeline.(Job_Name).opt.para5 = xf_Cell{i};
   pipeline.(Job_Name).opt.para6 = rho;
   pipeline.(Job_Name).opt.para7 = ResultantFile;
   pipeline.(Job_Name).files_out{1} = ResultantFile;
@@ -38,3 +38,4 @@ pipeline.(Job_Name).command = 'EnergyMerge_Function(files_in, files_out{1})';
 pipeline.(Job_Name).files_out{1} = ResultantFile;
 
 psom_run_pipeline(pipeline, Pipeline_opt);
+
