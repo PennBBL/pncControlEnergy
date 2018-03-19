@@ -17,7 +17,7 @@ end
 Strength_EigNorm_SubIden = Strength_EigNorm_SubIden';
 mkdir([ReplicationFolder '/data/WholeBrainStrength']);
 save([ReplicationFolder '/data/WholeBrainStrength/Strength_FA_949.mat'], 'Strength_EigNorm_SubIden', 'scan_ID');
-% 677 subjects whole have intace activation
+% 677 subjects whole have intact activation
 clear Strength_EigNorm_SubIden;
 clear scan_ID;
 Strength_Data_949 = load([ReplicationFolder '/data/WholeBrainStrength/Strength_FA_949.mat']);
@@ -49,7 +49,7 @@ for i = 1:length(volNormSC_Cell)
 end
 Strength_EigNorm_SubIden = Strength_EigNorm_SubIden';
 save([ReplicationFolder '/data/WholeBrainStrength/Strength_volNormSC_949.mat'], 'Strength_EigNorm_SubIden', 'scan_ID');
-% 677 subjects whole have intace activation
+% 677 subjects whole have intact activation
 clear Strength_EigNorm_SubIden;
 clear scan_ID;
 Strength_Data_949 = load([ReplicationFolder '/data/WholeBrainStrength/Strength_volNormSC_949.mat']);

@@ -1,7 +1,8 @@
-########################################################################################################
-### This script will construct a subject sample for Rick's PNC-Control-Clinical analyses, retaining  ###
-###     subjects who passed quality assurance protocols for Freesurfer, DTI, and healthExcludev2     ###
-########################################################################################################
+##########################################################################################################
+### This script will construct a subject sample for PNC-ControlEnergy-Development analyses, retaining  ###
+###     subjects who passed quality assurance protocols for Freesurfer, DTI, and healthExcludev2.      ###
+###                    Finally, create an excel containing IDs of subjects we used.                    ###
+##########################################################################################################
 
 ## LTN and Health Status
 health <- read.csv("/data/joy/BBL/studies/pnc/n1601_dataFreeze/health/n1601_health_20170421.csv")

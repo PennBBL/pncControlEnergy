@@ -32,7 +32,7 @@ Type = 'FA';
 ResultantFolder = [FA_ResultantFolder '/InitialAll0_TargetIndividualActivationZScore'];
 EnergyCal_IndividualTarget_SGE_Function(Lausanne125_FA_Matrix_Cell(Include_Index), T, xc, x0, xf_Cell, rho, Type, ResultantFolder);
 
-% Calculating yeo average value
+% Calculating yeo average value; Yeo 7 system + subcortical system
 Atlas_Yeo_Index = load([Data_Folder '/Yeo_7system_in_Lausanne234.txt']);
 Atlas_Yeo_Index = Atlas_Yeo_Index(1:233);
 for i = 1:8

@@ -1,5 +1,9 @@
 #!/bin/sh
 
+#####################################################################################################
+### Copy FA and volume corrected SC matrices according to IDs created by 1_compile_subject_data.R ### 
+#####################################################################################################
+
 ## Define subject list
 scanid_list=$(cut -d',' -f2 < /data/jux/BBL/projects/pncControlEnergy/results/Replication/data/pncControlEnergy_n949_subjectIDs.csv) 
 

@@ -1,6 +1,13 @@
 
 clear
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%  Removing brain stem from the FA and volume corrected SC matrices                           %%%
+%%%  Also, creating a .mat file 'ScanID_MatrixOrder.mat', containing the order of the matrices  %%%
+%%%  Then, when extracting behavior or activation data, they should be consistent with this     %%%
+%%%        order for facilitate the statistical analysis.                                       %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 Original_Folder = '/data/jux/BBL/projects/pncControlEnergy/results/Replication/data/matrices';
 Resultant_Folder = '/data/jux/BBL/projects/pncControlEnergy/results/Replication/data/matrices_withoutBrainStem/';
 mkdir(Resultant_Folder);

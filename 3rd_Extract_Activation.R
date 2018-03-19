@@ -1,4 +1,12 @@
 
+#################################################################################################################
+###  Extracting activation data (677 subjects in all)                                                         ###
+###  First, merge activation data, activation QA data, .etc according to the order of matrices (important)    ###
+###  Second, remove subjects with nbackExclude=1, nbackZerobackNrExclude=1 or NA values in activation data    ###
+###          Finally, 677 subjects remain                                                                     ###
+###  Third, save the 2back-0back activation and index of 677 subjects, average activation                     ###
+#################################################################################################################
+
 library(R.matlab);
 ScanIDMat = "/data/jux/BBL/projects/pncControlEnergy/results/Replication/data/ScanID_MatrixOrder.mat";
 tmp = readMat(ScanIDMat);
@@ -14,7 +22,6 @@ nback_All_Data <- merge(nback_All_Data, nbackBehavior_Data, by = c("bblid", "sca
 
 Activation_Extract <- merge(ScanID_MatrixOrder, nback_All_Data, by = "scanid"); # Sort data according to the order of matrices
 
-# Extract 2 back - 0 back data
 st <- which(colnames(Activation_Extract) == 'nback_lausanne125_cope4_2back0back_roi1');
 nd <- which(colnames(Activation_Extract) == 'nback_lausanne125_cope4_2back0back_roi233');
 Activation_2b0b = as.matrix(Activation_Extract[, st:nd]);

@@ -26,8 +26,6 @@ demo <- merge(demo, Psychopathology_Data, by = c("scanid", "bblid"));
 dir.create("/data/jux/BBL/projects/pncControlEnergy/results/Replication/data/BehaviorData/");
 write.csv(demo, "/data/jux/BBL/projects/pncControlEnergy/results/Replication/data/BehaviorData/n949_Behavior_20180316.csv", row.names = FALSE);
 
-
-
 ##### For all 677 subjects who have intact activation data, will be used when individualized activation as target state
 Activation_677_Mat = '/data/jux/BBL/projects/pncControlEnergy/results/Replication/data/ActivationData/nback_2b0b_20180202.mat';
 tmp = readMat(Activation_677_Mat);
