@@ -26,6 +26,10 @@ Strength_EigNorm_SubIden <- as.numeric(StrengthInfo$Strength.EigNorm.SubIden);
 ResultantFolder <- paste(ReplicationFolder, '/results/FA_Energy/InitialAll0_TargetIndividualActivationZScore', sep = '');
 Energy_Data_Folder = paste(ReplicationFolder, '/data/energyData', sep = '');
 Parameters <- c(0.1, 0.2, 0.5, 0.8, 2, 5, 8, 10);
+
+########################
+### Vary T parameter ###
+########################
 for (i in c(1:8))
 {
   Para_Str <- as.character(Parameters[i]);
@@ -64,7 +68,7 @@ for (i in c(1:8))
   write.csv(Energy_Gam_Age, Energy_Gam_Age_CSV);
   Energy_Gam_Age_Mat <- file.path(ResultantFolder, paste('Energy_Gam_Age_NodalLevel_T_', Para_Str, '.mat', sep = ''));
   writeMat(Energy_Gam_Age_Mat, Age_Z = Energy_Gam_Age[, 1], Age_P = Energy_Gam_Age[, 2], Age_P_FDR = Energy_Gam_Age[, 3]);
-  # Yeo system level
+  # Yeo system average level
   SystemsQuantity = 8;
   RowName_Yeo = c('Visual', 'Somatomotor', 'Dorsal attention', 'Ventral attention', 'Limbic', 'Frontalprietal', 'Default mode', 'Subcortical');
   Energy_Gam_Age_YeoAvg <- matrix(c(1:SystemsQuantity*3), nrow = SystemsQuantity, ncol = 3, dimnames = list(RowName_Yeo, ColName));
@@ -88,6 +92,9 @@ for (i in c(1:8))
   writeMat(Energy_Gam_Age_Mat, Age_Z = Energy_Gam_Age_YeoAvg[, 1], Age_P = Energy_Gam_Age_YeoAvg[, 2], Age_P_FDR = Energy_Gam_Age_YeoAvg[, 3]);
 }
 
+##########################
+### Vary rho parameter ###
+##########################
 for (i in c(1:8))
 {
   Para_Str <- as.character(Parameters[i]);
@@ -126,7 +133,7 @@ for (i in c(1:8))
   write.csv(Energy_Gam_Age, Energy_Gam_Age_CSV);
   Energy_Gam_Age_Mat <- file.path(ResultantFolder, paste('Energy_Gam_Age_NodalLevel_rho_', Para_Str, '.mat', sep = ''));
   writeMat(Energy_Gam_Age_Mat, Age_Z = Energy_Gam_Age[, 1], Age_P = Energy_Gam_Age[, 2], Age_P_FDR = Energy_Gam_Age[, 3]);
-  # Yeo system level
+  # Yeo system average level
   SystemsQuantity = 8;
   RowName_Yeo = c('Visual', 'Somatomotor', 'Dorsal attention', 'Ventral attention', 'Limbic', 'Frontalprietal', 'Default mode', 'Subcortical');
   Energy_Gam_Age_YeoAvg <- matrix(c(1:SystemsQuantity*3), nrow = SystemsQuantity, ncol = 3, dimnames = list(RowName_Yeo, ColName));

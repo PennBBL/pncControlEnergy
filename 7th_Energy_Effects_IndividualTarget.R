@@ -6,16 +6,22 @@ library(ggplot2);
 
 ReplicationFolder = '/data/jux/BBL/projects/pncControlEnergy/results/Replication';
 
-#######################################################################
-########## Individualized activation as each specific target ##########
-##########              Main results: FA network             ##########
-##########     Validation: volume corrected SC network       ##########
-#######################################################################
+##################################################################################
+########## Individualized activation (z-scored) as each specific target ##########
+##########                 Main results: FA network                     ##########
+##########         Validation: volume corrected SC network              ##########
+##################################################################################
 
 Energy_Mat_Path = paste(ReplicationFolder, '/data/energyData/FA_Energy/FA_InitialAll0_TargetIndividualActivationZScore.mat', sep = '');
 Energy_Mat = readMat(Energy_Mat_Path);
 Energy <- Energy_Mat$Energy;
 Energy_YeoAvg <- Energy_Mat$Energy.YeoAvg;
+
+ResultantFolder <- paste(ReplicationFolder, '/results/FA_Energy/InitialAll0_TargetIndividualActivationZScore', sep = '');
+if (!dir.exists(ResultantFolder))
+{
+  dir.create(ResultantFolder, recursive = TRUE);
+}
 
 ######################################
 # boxplot the energy for each system #
@@ -66,8 +72,7 @@ Strength_EigNorm_SubIden_Cognition <- Strength_EigNorm_SubIden[NANIndex];
 #############################################
 # Correlation between energy and activation #
 #############################################
-print('Nodal level correlation between energy and activation');
-print('Wait ...');
+print('###### Nodal level correlation between energy and activation ######');
 Activation <- readMat(paste(ReplicationFolder, '/data/Activation_803.mat', sep = ''));
 Activation_2b0b <- Activation$Activation.2b0b;
 # nodal correlation
@@ -84,18 +89,15 @@ for (i in c(1:233))
   T_Activation_Energy[i] <- summary(Gam_Activation_Energy)$p.table[2,3];
 }            
 P_Activation_Energy_fdr = p.adjust(P_Activation_Energy, "fdr");
-ResultantFolder <- paste(ReplicationFolder, '/results/FA_Energy/InitialAll0_TargetIndividualActivationZScore', sep = '');
-dir.create(ResultantFolder, recursive = TRUE);
 Activation_Energy_Mat <- file.path(ResultantFolder, 'Activation_Energy_Relation.mat');
 writeMat(Activation_Energy_Mat, T_Activation_Energy = T_Activation_Energy, P_Activation_Energy = P_Activation_Energy, P_Activation_Energy_fdr = P_Activation_Energy_fdr);
-print('Finished!');
 print(paste('Resultant file is ', Activation_Energy_Mat, sep = ''));
 
 ######################################################
 # Age effect of energy at nodal and Yeo system level #
 ######################################################
 # Nodal level
-print('Age effect of energy at nodal level (FA matrix)');
+print('###### Age effect of energy at nodal level (FA matrix) ######');
 dimension <- dim(Energy);
 RegionsQuantity <- dimension[2];
 RowName_Nodal <- character(length = RegionsQuantity);
@@ -122,10 +124,9 @@ Energy_Gam_Age_CSV <- file.path(ResultantFolder, 'Energy_Gam_Age_NodalLevel.csv'
 write.csv(Energy_Gam_Age, Energy_Gam_Age_CSV);
 Energy_Gam_Age_Mat <- file.path(ResultantFolder, 'Energy_Gam_Age_NodalLevel.mat');
 writeMat(Energy_Gam_Age_Mat, Age_Z = Energy_Gam_Age[, 1], Age_P = Energy_Gam_Age[, 2], Age_P_FDR = Energy_Gam_Age[, 3]);
-print('Finished!');
 print(paste('Resultant file is ', Energy_Gam_Age_Mat, sep = ''));
 # Yeo system average level
-print('Age effect of energy at Yeo system level (FA matrix)');
+print('###### Age effect of energy at Yeo system level (FA matrix) ######');
 SystemsQuantity = 8;
 RowName_Yeo = c('Visual', 'Somatomotor', 'Dorsal attention', 'Ventral attention', 'Limbic', 'Frontalprietal', 'Default mode', 'Subcortical');
 Energy_Gam_Age_YeoAvg <- matrix(c(1:SystemsQuantity*3), nrow = SystemsQuantity, ncol = 3, dimnames = list(RowName_Yeo, ColName));
@@ -149,7 +150,7 @@ print(Energy_Gam_Age_YeoAvg);
 # Cognition effect of energy at nodal level #
 #############################################
 # OverallAccuracy
-print('OverallAccuracy effect of energy at nodal level (FA matrix)');
+print('###### OverallAccuracy effect of energy at nodal level (FA matrix) ######');
 Energy_Gam_Cognition <- matrix(c(1:RegionsQuantity*3), nrow = RegionsQuantity, ncol = 3, dimnames = list(RowName_Nodal, ColName));
 for (i in 1:RegionsQuantity)
 {
@@ -164,10 +165,9 @@ Energy_Gam_Cognition_CSV <- file.path(ResultantFolder, 'Energy_Gam_OverallAccura
 write.csv(Energy_Gam_Cognition, Energy_Gam_Cognition_CSV);
 Energy_Gam_Cognition_Mat <- file.path(ResultantFolder, 'Energy_Gam_OverallAccuracy_NodalLevel.mat');
 writeMat(Energy_Gam_Cognition_Mat, Cognition_Z = Energy_Gam_Cognition[, 1], Cognition_P = Energy_Gam_Cognition[, 2], Cognition_P_FDR = Energy_Gam_Cognition[, 3]);
-print('Finished!');
 print(paste('Resultant file is ', Energy_Gam_Cognition_Mat, sep = ''));
 # F1ExecCompResAccuracy
-print('F1ExecCompResAccuracy effect of energy at nodal level (FA matrix)');
+print('###### F1ExecCompResAccuracy effect of energy at nodal level (FA matrix) ######');
 Energy_Gam_Cognition <- matrix(c(1:RegionsQuantity*3), nrow = RegionsQuantity, ncol = 3, dimnames = list(RowName_Nodal, ColName));
 for (i in 1:RegionsQuantity)
 {
@@ -182,10 +182,9 @@ Energy_Gam_Cognition_CSV <- file.path(ResultantFolder, 'Energy_Gam_F1ExecCompRes
 write.csv(Energy_Gam_Cognition, Energy_Gam_Cognition_CSV);
 Energy_Gam_Cognition_Mat <- file.path(ResultantFolder, 'Energy_Gam_F1ExecCompResAccuracy_NodalLevel.mat');
 writeMat(Energy_Gam_Cognition_Mat, Cognition_Z = Energy_Gam_Cognition[, 1], Cognition_P = Energy_Gam_Cognition[, 2], Cognition_P_FDR = Energy_Gam_Cognition[, 3]);
-print('Finished!');
 print(paste('Resultant file is ', Energy_Gam_Cognition_Mat, sep = ''));
 # F3MemoryAccuracy
-print('F3MemoryAccuracy effect of energy at nodal level (FA matrix)');
+print('###### F3MemoryAccuracy effect of energy at nodal level (FA matrix) ######');
 Energy_Gam_Cognition <- matrix(c(1:RegionsQuantity*3), nrow = RegionsQuantity, ncol = 3, dimnames = list(RowName_Nodal, ColName));
 for (i in 1:RegionsQuantity)
 {
@@ -200,14 +199,13 @@ Energy_Gam_Cognition_CSV <- file.path(ResultantFolder, 'Energy_Gam_F3MemoryAccur
 write.csv(Energy_Gam_Cognition, Energy_Gam_Cognition_CSV);
 Energy_Gam_Cognition_Mat <- file.path(ResultantFolder, 'Energy_Gam_F3MemoryAccuracy_NodalLevel.mat');
 writeMat(Energy_Gam_Cognition_Mat, Cognition_Z = Energy_Gam_Cognition[, 1], Cognition_P = Energy_Gam_Cognition[, 2], Cognition_P_FDR = Energy_Gam_Cognition[, 3]);
-print('Finished!');
 print(paste('Resultant file is ', Energy_Gam_Cognition_Mat, sep = ''));
 
 ##################################################
 # Cognition effect of energy at Yeo system level #
 ##################################################
 # OverallAccuracy
-print('OverallAccuracy effect of energy at Yeo system level (FA matrix)');
+print('###### OverallAccuracy effect of energy at Yeo system level (FA matrix) ######');
 Energy_Gam_Cognition_YeoAvg <- matrix(c(1:SystemsQuantity*3), nrow = SystemsQuantity, ncol = 3, dimnames = list(RowName_Yeo, ColName));
 for (i in 1:SystemsQuantity)
 {
@@ -220,7 +218,7 @@ for (i in 1:SystemsQuantity)
 Energy_Gam_Cognition_YeoAvg[, 3] <- p.adjust(Energy_Gam_Cognition_YeoAvg[, 2], "fdr");
 print(Energy_Gam_Cognition_YeoAvg);
 # F1ExecCompResAccuracy
-print('F1ExecCompResAccuracy effect of energy at Yeo system level (FA matrix)');
+print('###### F1ExecCompResAccuracy effect of energy at Yeo system level (FA matrix) ######');
 Energy_Gam_Cognition_YeoAvg <- matrix(c(1:SystemsQuantity*3), nrow = SystemsQuantity, ncol = 3, dimnames = list(RowName_Yeo, ColName));
 for (i in 1:SystemsQuantity)
 {
@@ -233,7 +231,7 @@ for (i in 1:SystemsQuantity)
 Energy_Gam_Cognition_YeoAvg[, 3] <- p.adjust(Energy_Gam_Cognition_YeoAvg[, 2], "fdr");
 print(Energy_Gam_Cognition_YeoAvg);
 # F3MemoryAccuracy
-print('F3MemoryAccuracy effect of energy at Yeo system level (FA matrix)');
+print('###### F3MemoryAccuracy effect of energy at Yeo system level (FA matrix) ######');
 Energy_Gam_Cognition_YeoAvg <- matrix(c(1:SystemsQuantity*3), nrow = SystemsQuantity, ncol = 3, dimnames = list(RowName_Yeo, ColName));
 for (i in 1:SystemsQuantity)
 {
@@ -256,10 +254,13 @@ Energy <- Energy_Mat$Energy;
 Energy_YeoAvg <- Energy_Mat$Energy.YeoAvg;
 
 ResultantFolder <- paste(ReplicationFolder, '/results/volNormSC_Energy/InitialAll0_TargetIndividualActivationZScore', sep = '');
-dir.create(ResultantFolder, recursive = TRUE);
+if (!dir.exists(ResultantFolder))
+{
+  dir.create(ResultantFolder, recursive = TRUE);
+}
 
 # Import whole brain strength of volume correct SC matrices
-StrengthInfo <- readMat(paste(ReplicationFolder, '/data/WholeBrainStrength/Strength_volNormSC_677.mat', sep = ''));
+StrengthInfo <- readMat(paste(ReplicationFolder, '/data/WholeBrainStrength/Strength_volNormSC_803.mat', sep = ''));
 Strength_EigNorm_SubIden <- as.numeric(StrengthInfo$Strength.EigNorm.SubIden);
 Strength_EigNorm_SubIden_Cognition <- Strength_EigNorm_SubIden[NANIndex];
 
@@ -267,6 +268,7 @@ Strength_EigNorm_SubIden_Cognition <- Strength_EigNorm_SubIden[NANIndex];
 # Age effect of energy at nodal and Yeo system level #
 ######################################################
 # Nodal level
+print('###### Age effect of energy at nodal level (volNormSC matrix) ######');
 dimension <- dim(Energy);
 RegionsQuantity <- dimension[2];
 RowName_Nodal <- character(length = RegionsQuantity);
@@ -293,7 +295,9 @@ Energy_Gam_Age_CSV <- file.path(ResultantFolder, 'Energy_Gam_Age_NodalLevel.csv'
 write.csv(Energy_Gam_Age, Energy_Gam_Age_CSV);
 Energy_Gam_Age_Mat <- file.path(ResultantFolder, 'Energy_Gam_Age_NodalLevel.mat');
 writeMat(Energy_Gam_Age_Mat, Age_Z = Energy_Gam_Age[, 1], Age_P = Energy_Gam_Age[, 2], Age_P_FDR = Energy_Gam_Age[, 3]);
+print(paste('Resultant file is ', Energy_Gam_Age_Mat, sep = ''));
 # Yeo system level
+print('###### Age effect of energy at Yeo system level (volNormSC matrix) ######');
 SystemsQuantity = 8;
 RowName_Yeo = c('Visual', 'Somatomotor', 'Dorsal attention', 'Ventral attention', 'Limbic', 'Frontalprietal', 'Default mode', 'Subcortical');
 Energy_Gam_Age_YeoAvg <- matrix(c(1:SystemsQuantity*3), nrow = SystemsQuantity, ncol = 3, dimnames = list(RowName_Yeo, ColName));
@@ -311,11 +315,13 @@ for (i in 1:SystemsQuantity)
   #visreg(Energy_Gam, "Age_years", xlab = "Age (years)", ylab = paste("Average energy ",RowName[i],sep=''), gg = TRUE) + theme(text=element_text(size=20));
 }
 Energy_Gam_Age_YeoAvg[, 3] <- p.adjust(Energy_Gam_Age_YeoAvg[, 2], "fdr");
+print(Energy_Gam_Age_YeoAvg);
 
 #############################################
 # Cognition effect of energy at nodal level #
 #############################################
 # OverallAccuracy
+print('###### OverallAccuracy effect of energy at nodal level (volNormSC matrix) ######');
 Energy_Gam_Cognition <- matrix(c(1:RegionsQuantity*3), nrow = RegionsQuantity, ncol = 3, dimnames = list(RowName_Nodal, ColName));
 for (i in 1:RegionsQuantity)
 { 
@@ -330,7 +336,9 @@ Energy_Gam_Cognition_CSV <- file.path(ResultantFolder, 'Energy_Gam_OverallAccura
 write.csv(Energy_Gam_Cognition, Energy_Gam_Cognition_CSV);
 Energy_Gam_Cognition_Mat <- file.path(ResultantFolder, 'Energy_Gam_OverallAccuracy_NodalLevel.mat');
 writeMat(Energy_Gam_Cognition_Mat, Cognition_Z = Energy_Gam_Cognition[, 1], Cognition_P = Energy_Gam_Cognition[, 2], Cognition_P_FDR = Energy_Gam_Cognition[, 3]);
+print(paste('Resultant file is ', Energy_Gam_Cognition_Mat, sep = ''));
 # F1ExecCompResAccuracy
+print('###### F1ExecCompResAccuracy effect of energy at nodal level (volNormSC matrix) ######');
 Energy_Gam_Cognition <- matrix(c(1:RegionsQuantity*3), nrow = RegionsQuantity, ncol = 3, dimnames = list(RowName_Nodal, ColName));
 for (i in 1:RegionsQuantity)
 { 
@@ -345,12 +353,13 @@ Energy_Gam_Cognition_CSV <- file.path(ResultantFolder, 'Energy_Gam_F1ExecCompRes
 write.csv(Energy_Gam_Cognition, Energy_Gam_Cognition_CSV);
 Energy_Gam_Cognition_Mat <- file.path(ResultantFolder, 'Energy_Gam_F1ExecCompResAccuracy_NodalLevel.mat');
 writeMat(Energy_Gam_Cognition_Mat, Cognition_Z = Energy_Gam_Cognition[, 1], Cognition_P = Energy_Gam_Cognition[, 2], Cognition_P_FDR = Energy_Gam_Cognition[, 3]);
+print(paste('Resultant file is ', Energy_Gam_Cognition_Mat, sep = ''));
 
 ##################################################
 # Cognition effect of energy at Yeo system level #
 ##################################################
 # OverallAccuracy
-print('Cognition effec');
+print('###### OverallAccuracy effect of energy at Yeo system level (volNormSC matrix) ######');
 Energy_Gam_Cognition_YeoAvg <- matrix(c(1:SystemsQuantity*3), nrow = SystemsQuantity, ncol = 3, dimnames = list(RowName_Yeo, ColName));
 for (i in 1:SystemsQuantity)
 { 
@@ -361,7 +370,9 @@ for (i in 1:SystemsQuantity)
   Energy_Gam_Cognition_YeoAvg[i, 2] <- summary(Energy_Gam)$p.pv[2];
 }
 Energy_Gam_Cognition_YeoAvg[, 3] <- p.adjust(Energy_Gam_Cognition_YeoAvg[, 2], "fdr");
+print(Energy_Gam_Cognition_YeoAvg);
 # F1ExecCompResAccuracy
+print('###### F1ExecCompResAccuracy effect of energy at Yeo system level (volNormSC matrix) ######');
 Energy_Gam_Cognition_YeoAvg <- matrix(c(1:SystemsQuantity*3), nrow = SystemsQuantity, ncol = 3, dimnames = list(RowName_Yeo, ColName));
 for (i in 1:SystemsQuantity)
 { 
@@ -372,7 +383,9 @@ for (i in 1:SystemsQuantity)
   Energy_Gam_Cognition_YeoAvg[i, 2] <- summary(Energy_Gam)$p.pv[2];
 }
 Energy_Gam_Cognition_YeoAvg[, 3] <- p.adjust(Energy_Gam_Cognition_YeoAvg[, 2], "fdr");
+print(Energy_Gam_Cognition_YeoAvg);
 # F3MemoryAccuracy
+print('###### F1MemoryAccuracy effect of energy at Yeo system level (volNormSC matrix) ######');
 Energy_Gam_Cognition_YeoAvg <- matrix(c(1:SystemsQuantity*3), nrow = SystemsQuantity, ncol = 3, dimnames = list(RowName_Yeo, ColName));
 for (i in 1:SystemsQuantity)
 { 
@@ -383,3 +396,4 @@ for (i in 1:SystemsQuantity)
   Energy_Gam_Cognition_YeoAvg[i, 2] <- summary(Energy_Gam)$p.pv[2];
 }
 Energy_Gam_Cognition_YeoAvg[, 3] <- p.adjust(Energy_Gam_Cognition_YeoAvg[, 2], "fdr");
+print(Energy_Gam_Cognition_YeoAvg);
