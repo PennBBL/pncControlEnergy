@@ -11,7 +11,7 @@ ReplicationFolder = '/data/jux/BBL/projects/pncControlEnergy/results/Replication
 #######################################################################
 
 # Import behavior
-AllInfo <- read.csv(paste(ReplicationFolder, '/data/BehaviorData/n677_Behavior_20180316.csv', sep = ''));
+AllInfo <- read.csv(paste(ReplicationFolder, '/data/BehaviorData/n803_Behavior_20180321.csv', sep = ''));
 Behavior <- data.frame(Sex_factor = cut(AllInfo$sex, 2, labels = c("Male", "Female")));
 Behavior$Sex_order <- cut(AllInfo$sex, 2, labels = c("Male", "Female"), ordered_result = TRUE);
 Behavior$Age_years <- as.numeric(AllInfo$ageAtScan1/12);
@@ -20,7 +20,7 @@ Behavior$MotionMeanRelRMS <- as.numeric(AllInfo$dti64MeanRelRMS);
 Behavior$TBV <- as.numeric(AllInfo$mprage_antsCT_vol_TBV);
 
 # Whole brain strength
-StrengthInfo <- readMat(paste(ReplicationFolder, '/data/WholeBrainStrength/Strength_FA_677.mat', sep = ''));
+StrengthInfo <- readMat(paste(ReplicationFolder, '/data/WholeBrainStrength/Strength_FA_803.mat', sep = ''));
 Strength_EigNorm_SubIden <- as.numeric(StrengthInfo$Strength.EigNorm.SubIden);
 
 ResultantFolder <- paste(ReplicationFolder, '/results/FA_Energy/InitialAll0_TargetIndividualActivationZScore', sep = '');
@@ -33,6 +33,7 @@ Parameters <- c(0.1, 0.2, 0.5, 0.8, 2, 5, 8, 10);
 for (i in c(1:8))
 {
   Para_Str <- as.character(Parameters[i]);
+  print(paste('###### T = ', Para_Str, ' ######', sep = ''));
   if (i < 5){
     Para_Str <- paste(substr(Para_Str, 1, 1), substr(Para_Str, 3, 3), sep = '');
   }
@@ -41,6 +42,7 @@ for (i in c(1:8))
   Energy <- Energy_Mat$Energy;
   Energy_YeoAvg <- Energy_Mat$Energy.YeoAvg;
   # Nodal level
+  print('###### Age effect of energy at nodal level ######');
   dimension <- dim(Energy);
   RegionsQuantity <- dimension[2];
   RowName_Nodal <- character(length = RegionsQuantity);
@@ -52,7 +54,6 @@ for (i in c(1:8))
   Energy_Gam_Age <- matrix(c(1:RegionsQuantity*3), nrow = RegionsQuantity, ncol = 3, dimnames = list(RowName_Nodal, ColName));
   for (i in 1:RegionsQuantity)
   {
-    print(i);
     tmp_variable <- Energy[, i];
     Energy_Gam <- gam(tmp_variable ~ s(Age_years, k=4) + Sex_factor + HandednessV2 + MotionMeanRelRMS + TBV + Strength_EigNorm_SubIden, method = "REML", data = Behavior);
     Energy_Gam_Age[i, 2] <- summary(Energy_Gam)$s.table[, 4];
@@ -68,13 +69,14 @@ for (i in c(1:8))
   write.csv(Energy_Gam_Age, Energy_Gam_Age_CSV);
   Energy_Gam_Age_Mat <- file.path(ResultantFolder, paste('Energy_Gam_Age_NodalLevel_T_', Para_Str, '.mat', sep = ''));
   writeMat(Energy_Gam_Age_Mat, Age_Z = Energy_Gam_Age[, 1], Age_P = Energy_Gam_Age[, 2], Age_P_FDR = Energy_Gam_Age[, 3]);
+  print(paste('Resultant file is ', Energy_Gam_Age_Mat, sep = ''));
   # Yeo system average level
+  print('###### Age effect of energy at Yeo system level ######');
   SystemsQuantity = 8;
   RowName_Yeo = c('Visual', 'Somatomotor', 'Dorsal attention', 'Ventral attention', 'Limbic', 'Frontalprietal', 'Default mode', 'Subcortical');
   Energy_Gam_Age_YeoAvg <- matrix(c(1:SystemsQuantity*3), nrow = SystemsQuantity, ncol = 3, dimnames = list(RowName_Yeo, ColName));
   for (i in 1:SystemsQuantity)
   {
-    print(i);
     tmp_variable <- Energy_YeoAvg[, i];
     Energy_Gam <- gam(tmp_variable ~ s(Age_years, k=4) + Sex_factor + HandednessV2 + MotionMeanRelRMS + TBV + Strength_EigNorm_SubIden, method = "REML", data = Behavior);
     Energy_Gam_Age_YeoAvg[i, 2] <- summary(Energy_Gam)$s.table[, 4];
@@ -90,6 +92,7 @@ for (i in c(1:8))
   write.csv(Energy_Gam_Age_YeoAvg, Energy_Gam_Age_CSV);
   Energy_Gam_Age_Mat <- file.path(ResultantFolder, paste('Energy_Gam_Age_YeoAvg_T_', Para_Str, '.mat', sep = ''));
   writeMat(Energy_Gam_Age_Mat, Age_Z = Energy_Gam_Age_YeoAvg[, 1], Age_P = Energy_Gam_Age_YeoAvg[, 2], Age_P_FDR = Energy_Gam_Age_YeoAvg[, 3]);
+  print(Energy_Gam_Age_YeoAvg);
 }
 
 ##########################
@@ -98,6 +101,7 @@ for (i in c(1:8))
 for (i in c(1:8))
 {
   Para_Str <- as.character(Parameters[i]);
+  print(paste('###### rho = ', Para_Str, ' ######', sep = ''));
   if (i < 5){
     Para_Str <- paste(substr(Para_Str, 1, 1), substr(Para_Str, 3, 3), sep = '');
   }
@@ -106,6 +110,7 @@ for (i in c(1:8))
   Energy <- Energy_Mat$Energy;
   Energy_YeoAvg <- Energy_Mat$Energy.YeoAvg;
   # Nodal level
+  print('###### Age effect of energy at nodal level ######');
   dimension <- dim(Energy);
   RegionsQuantity <- dimension[2];
   RowName_Nodal <- character(length = RegionsQuantity);
@@ -117,7 +122,6 @@ for (i in c(1:8))
   Energy_Gam_Age <- matrix(c(1:RegionsQuantity*3), nrow = RegionsQuantity, ncol = 3, dimnames = list(RowName_Nodal, ColName));
   for (i in 1:RegionsQuantity)
   {
-    print(i);
     tmp_variable <- Energy[, i];
     Energy_Gam <- gam(tmp_variable ~ s(Age_years, k=4) + Sex_factor + HandednessV2 + MotionMeanRelRMS + TBV + Strength_EigNorm_SubIden, method = "REML", data = Behavior);
     Energy_Gam_Age[i, 2] <- summary(Energy_Gam)$s.table[, 4];
@@ -133,13 +137,14 @@ for (i in c(1:8))
   write.csv(Energy_Gam_Age, Energy_Gam_Age_CSV);
   Energy_Gam_Age_Mat <- file.path(ResultantFolder, paste('Energy_Gam_Age_NodalLevel_rho_', Para_Str, '.mat', sep = ''));
   writeMat(Energy_Gam_Age_Mat, Age_Z = Energy_Gam_Age[, 1], Age_P = Energy_Gam_Age[, 2], Age_P_FDR = Energy_Gam_Age[, 3]);
+  print(paste('Resultant file is ', Energy_Gam_Age_Mat, sep = ''));
   # Yeo system average level
+  print('###### Age effect of energy at Yeo system level ######');
   SystemsQuantity = 8;
   RowName_Yeo = c('Visual', 'Somatomotor', 'Dorsal attention', 'Ventral attention', 'Limbic', 'Frontalprietal', 'Default mode', 'Subcortical');
   Energy_Gam_Age_YeoAvg <- matrix(c(1:SystemsQuantity*3), nrow = SystemsQuantity, ncol = 3, dimnames = list(RowName_Yeo, ColName));
   for (i in 1:SystemsQuantity)
   {
-    print(i);
     tmp_variable <- Energy_YeoAvg[, i];
     Energy_Gam <- gam(tmp_variable ~ s(Age_years, k=4) + Sex_factor + HandednessV2 + MotionMeanRelRMS + TBV + Strength_EigNorm_SubIden, method = "REML", data = Behavior);
     Energy_Gam_Age_YeoAvg[i, 2] <- summary(Energy_Gam)$s.table[, 4];
@@ -155,5 +160,6 @@ for (i in c(1:8))
   write.csv(Energy_Gam_Age_YeoAvg, Energy_Gam_Age_CSV);
   Energy_Gam_Age_Mat <- file.path(ResultantFolder, paste('Energy_Gam_Age_YeoAvg_rho_', Para_Str, '.mat', sep = ''));
   writeMat(Energy_Gam_Age_Mat, Age_Z = Energy_Gam_Age_YeoAvg[, 1], Age_P = Energy_Gam_Age_YeoAvg[, 2], Age_P_FDR = Energy_Gam_Age_YeoAvg[, 3]);  
+  print(Energy_Gam_Age_YeoAvg);
 } 
 
