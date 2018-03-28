@@ -23,9 +23,9 @@ if (!dir.exists(ResultantFolder))
   dir.create(ResultantFolder, recursive = TRUE);
 }
 
-######################################
-# boxplot the energy for each system #
-######################################
+#########################################
+# 1. boxplot the energy for each system #
+#########################################
 Yeo_atlas <- readMat(paste(ReplicationFolder, '/data/Yeo_7system.mat', sep = ''));
 Energy_SubjectsAvg <- colMeans(Energy);
 tmp <- data.frame(Energy_data = log(Energy_SubjectsAvg), Yeo = Yeo_atlas$Yeo.7system);
@@ -35,9 +35,9 @@ Fig <- ggplot(tmp, aes(x = Yeo, y = Energy_data)) + geom_boxplot(fill = c("#AF33
 Fig <- Fig + labs(x = "", y = "log(Energy)") + theme_classic()
 Fig + theme(axis.text = element_text(size= 18, colour="black"), axis.title=element_text(size = 24), axis.text.x = element_text(angle = 45, hjust = 1));
 
-################################################
-# plot correlation between energy and distance #
-################################################
+###################################################
+# 2. plot correlation between energy and distance #
+###################################################
 Energy_WholeBrainAvg <- rowMeans(Energy);
 Distance <- as.numeric(Energy_Mat$Distance.sum);
 cor.test(as.vector(Distance), as.vector(Energy_WholeBrainAvg));
@@ -73,9 +73,9 @@ Behavior_New$F2SocialCogAccuracy <- AllInfo$F2_Social_Cog_Accuracy[NANIndex];
 Behavior_New$F3MemoryAccuracy <- AllInfo$F3_Memory_Accuracy[NANIndex];
 Strength_EigNorm_SubIden_Cognition <- Strength_EigNorm_SubIden[NANIndex];
 
-#############################################
-# Correlation between energy and activation #
-#############################################
+################################################
+# 3. Correlation between energy and activation #
+################################################
 print('###### Nodal level correlation between energy and activation ######');
 Activation <- readMat(paste(ReplicationFolder, '/data/Activation_803.mat', sep = ''));
 Activation_2b0b <- Activation$Activation.2b0b;
@@ -97,9 +97,9 @@ Activation_Energy_Mat <- file.path(ResultantFolder, 'Activation_Energy_Relation.
 writeMat(Activation_Energy_Mat, T_Activation_Energy = T_Activation_Energy, P_Activation_Energy = P_Activation_Energy, P_Activation_Energy_fdr = P_Activation_Energy_fdr);
 print(paste('Resultant file is ', Activation_Energy_Mat, sep = ''));
 
-######################################################
-# Age effect of energy at nodal and Yeo system level #
-######################################################
+#########################################################
+# 4. Age effect of energy at nodal and Yeo system level #
+#########################################################
 # Nodal level
 print('###### Age effect of energy at nodal level (FA matrix) ######');
 dimension <- dim(Energy);
@@ -110,13 +110,17 @@ for (i in 1:RegionsQuantity)
   RowName_Nodal[i] = paste("Node", as.character(i));
 }
 ColName <- c("Z", "P", "P_FDR");
+# Variable Energy_Gam_Age has three columns, the 1-3 columns were z value, p value and FDR corrected q value accordingly
 Energy_Gam_Age <- matrix(c(1:RegionsQuantity*3), nrow = RegionsQuantity, ncol = 3, dimnames = list(RowName_Nodal, ColName));
 for (i in 1:RegionsQuantity)
 {
   tmp_variable <- Energy[, i];
+  # Gam analysis was used for age effect
   Energy_Gam <- gam(tmp_variable ~ s(Age_years, k=4) + Sex_factor + HandednessV2 + MotionMeanRelRMS + TBV + Strength_EigNorm_SubIden, method = "REML", data = Behavior);
   Energy_Gam_Age[i, 2] <- summary(Energy_Gam)$s.table[, 4];
+  # Covert P value to Z value
   Energy_Gam_Age[i, 1] <- qnorm(Energy_Gam_Age[i, 2] / 2, lower.tail=FALSE);
+  # Linear model was used to test whether it is a positive or negative relationship
   Energy_lm <- lm(tmp_variable ~ Age_years + Sex_factor + HandednessV2 + MotionMeanRelRMS + TBV + Strength_EigNorm_SubIden, data = Behavior);
   Age_T <- summary(Energy_lm)$coefficients[2,3];
   if (Age_T < 0) {
@@ -124,6 +128,7 @@ for (i in 1:RegionsQuantity)
   }
 }
 Energy_Gam_Age[, 3] <- p.adjust(Energy_Gam_Age[, 2], "fdr");
+# Storing the results in both .csv and .mat file
 Energy_Gam_Age_CSV <- file.path(ResultantFolder, 'Energy_Gam_Age_NodalLevel.csv');
 write.csv(Energy_Gam_Age, Energy_Gam_Age_CSV);
 Energy_Gam_Age_Mat <- file.path(ResultantFolder, 'Energy_Gam_Age_NodalLevel.mat');
@@ -148,6 +153,7 @@ for (i in 1:SystemsQuantity)
   #visreg(Energy_Gam, "Age_years", xlab = "Age (years)", ylab = paste("Average energy ",RowName_Yeo[i],sep=''), gg = TRUE) + theme(text=element_text(size=20));
 }
 Energy_Gam_Age_YeoAvg[, 3] <- p.adjust(Energy_Gam_Age_YeoAvg[, 2], "fdr");
+print(Energy_Gam_Age_YeoAvg); # print the results, somatomotor, ventral attention, default mode and subcortical were significant
 Energy_Gam_Age_CSV <- file.path(ResultantFolder, 'Energy_Gam_Age_YeoSystemLevel.csv');
 write.csv(Energy_Gam_Age, Energy_Gam_Age_CSV);
 Energy_Gam_Age_Mat <- file.path(ResultantFolder, 'Energy_Gam_Age_YeoSystemLevel.mat');
@@ -168,7 +174,7 @@ for (i in 1:SystemsQuantity)
   Energy_Gam_Cognition_YeoAvg[i, 2] <- summary(Energy_Gam)$p.pv[2];
 }
 Energy_Gam_Cognition_YeoAvg[, 3] <- p.adjust(Energy_Gam_Cognition_YeoAvg[, 2], "fdr");
-print(Energy_Gam_Cognition_YeoAvg);
+print(Energy_Gam_Cognition_YeoAvg); # Frontoparietal, default mode and subcortical were significant
 Energy_Gam_Cognition_CSV <- file.path(ResultantFolder, 'Energy_Gam_OverallAccuracy_YeoSystemLevel.csv');
 write.csv(Energy_Gam_Cognition_YeoAvg, Energy_Gam_Cognition_CSV);
 Energy_Gam_Cognition_Mat <- file.path(ResultantFolder, 'Energy_Gam_OverallAccuracy_YeoSystemLevel.mat');
@@ -186,7 +192,7 @@ for (i in 1:SystemsQuantity)
   Energy_Gam_Cognition_YeoAvg[i, 2] <- summary(Energy_Gam)$p.pv[2];
 }
 Energy_Gam_Cognition_YeoAvg[, 3] <- p.adjust(Energy_Gam_Cognition_YeoAvg[, 2], "fdr");
-print(Energy_Gam_Cognition_YeoAvg);
+print(Energy_Gam_Cognition_YeoAvg); # Frontoparietal, default mode and subcortical were significant
 Energy_Gam_Cognition_CSV <- file.path(ResultantFolder, 'Energy_Gam_F1ExecCompResAccuracy_YeoSystemLevel.csv');
 write.csv(Energy_Gam_Cognition_YeoAvg, Energy_Gam_Cognition_CSV);
 Energy_Gam_Cognition_Mat <- file.path(ResultantFolder, 'Energy_Gam_F1ExecCompResAccuracy_YeoSystemLevel.mat');
@@ -204,7 +210,7 @@ for (i in 1:SystemsQuantity)
   Energy_Gam_Cognition_YeoAvg[i, 2] <- summary(Energy_Gam)$p.pv[2];
 }
 Energy_Gam_Cognition_YeoAvg[, 3] <- p.adjust(Energy_Gam_Cognition_YeoAvg[, 2], "fdr");
-print(Energy_Gam_Cognition_YeoAvg);
+print(Energy_Gam_Cognition_YeoAvg); # No system is significant
 Energy_Gam_Cognition_CSV <- file.path(ResultantFolder, 'Energy_Gam_F2SocialCogAccuracy_YeoSystemLevel.csv');
 write.csv(Energy_Gam_Cognition_YeoAvg, Energy_Gam_Cognition_CSV);
 Energy_Gam_Cognition_Mat <- file.path(ResultantFolder, 'Energy_Gam_F2SocialCogAccuracy_YeoSystemLevel.mat');
@@ -222,7 +228,7 @@ for (i in 1:SystemsQuantity)
   Energy_Gam_Cognition_YeoAvg[i, 2] <- summary(Energy_Gam)$p.pv[2];
 }
 Energy_Gam_Cognition_YeoAvg[, 3] <- p.adjust(Energy_Gam_Cognition_YeoAvg[, 2], "fdr"); 
-print(Energy_Gam_Cognition_YeoAvg);
+print(Energy_Gam_Cognition_YeoAvg); # Frontoparietal was significant
 Energy_Gam_Cognition_CSV <- file.path(ResultantFolder, 'Energy_Gam_F3MemoryAccuracy_YeoSystemLevel.csv');
 write.csv(Energy_Gam_Cognition_YeoAvg, Energy_Gam_Cognition_CSV);
 Energy_Gam_Cognition_Mat <- file.path(ResultantFolder, 'Energy_Gam_F3MemoryAccuracy_YeoSystemLevel.mat');
