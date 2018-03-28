@@ -46,6 +46,7 @@ Behavior_New$MotionMeanRelRMS <- Behavior$MotionMeanRelRMS[NANIndex];
 Behavior_New$TBV <- Behavior$TBV[NANIndex];
 Behavior_New$OverallAccuracy <- AllInfo$Overall_Accuracy[NANIndex];
 Behavior_New$F1ExecCompResAccuracy <- AllInfo$F1_Exec_Comp_Res_Accuracy[NANIndex];
+Behavior_New$F2SocialCogAccuracy <- AllInfo$F2_Social_Cog_Accuracy[NANIndex];
 Behavior_New$F3MemoryAccuracy <- AllInfo$F3_Memory_Accuracy[NANIndex];
 Strength_EigNorm_SubIden_Cognition <- Strength_EigNorm_SubIden[NANIndex];
 
@@ -101,44 +102,10 @@ for (i in 1:SystemsQuantity)
 }
 Energy_Gam_Age_YeoAvg[, 3] <- p.adjust(Energy_Gam_Age_YeoAvg[, 2], "fdr");
 print(Energy_Gam_Age_YeoAvg);
-
-#############################################
-# Cognition effect of energy at nodal level #
-#############################################
-# OverallAccuracy
-print('###### OverallAccuracy effect of energy at nodal level (volNormSC matrix) ######');
-Energy_Gam_Cognition <- matrix(c(1:RegionsQuantity*3), nrow = RegionsQuantity, ncol = 3, dimnames = list(RowName_Nodal, ColName));
-for (i in 1:RegionsQuantity)
-{ 
-  tmp_variable <- Energy[, i];
-  tmp_variable <- tmp_variable[NANIndex]; 
-  Energy_Gam <- gam(tmp_variable ~ s(Age_years, k=4) + OverallAccuracy + Sex_factor + HandednessV2 + MotionMeanRelRMS + TBV + Strength_EigNorm_SubIden_Cognition, method = "REML", data = Behavior_New);
-  Energy_Gam_Cognition[i, 1] <- summary(Energy_Gam)$p.t[2];
-  Energy_Gam_Cognition[i, 2] <- summary(Energy_Gam)$p.pv[2];
-}
-Energy_Gam_Cognition[, 3] <- p.adjust(Energy_Gam_Cognition[, 2], "fdr");
-Energy_Gam_Cognition_CSV <- file.path(ResultantFolder, 'Energy_Gam_OverallAccuracy_NodalLevel.csv');
-write.csv(Energy_Gam_Cognition, Energy_Gam_Cognition_CSV);
-Energy_Gam_Cognition_Mat <- file.path(ResultantFolder, 'Energy_Gam_OverallAccuracy_NodalLevel.mat');
-writeMat(Energy_Gam_Cognition_Mat, Cognition_Z = Energy_Gam_Cognition[, 1], Cognition_P = Energy_Gam_Cognition[, 2], Cognition_P_FDR = Energy_Gam_Cognition[, 3]);
-print(paste('Resultant file is ', Energy_Gam_Cognition_Mat, sep = ''));
-# F1ExecCompResAccuracy
-print('###### F1ExecCompResAccuracy effect of energy at nodal level (volNormSC matrix) ######');
-Energy_Gam_Cognition <- matrix(c(1:RegionsQuantity*3), nrow = RegionsQuantity, ncol = 3, dimnames = list(RowName_Nodal, ColName));
-for (i in 1:RegionsQuantity)
-{ 
-  tmp_variable <- Energy[, i];
-  tmp_variable <- tmp_variable[NANIndex];
-  Energy_Gam <- gam(tmp_variable ~ s(Age_years, k=4) + F1ExecCompResAccuracy + Sex_factor + HandednessV2 + MotionMeanRelRMS + TBV + Strength_EigNorm_SubIden_Cognition, method = "REML", data = Behavior_New);
-  Energy_Gam_Cognition[i, 1] <- summary(Energy_Gam)$p.t[2];
-  Energy_Gam_Cognition[i, 2] <- summary(Energy_Gam)$p.pv[2];
-}
-Energy_Gam_Cognition[, 3] <- p.adjust(Energy_Gam_Cognition[, 2], "fdr");
-Energy_Gam_Cognition_CSV <- file.path(ResultantFolder, 'Energy_Gam_F1ExecCompResAccuracy_NodalLevel.csv');
-write.csv(Energy_Gam_Cognition, Energy_Gam_Cognition_CSV);
-Energy_Gam_Cognition_Mat <- file.path(ResultantFolder, 'Energy_Gam_F1ExecCompResAccuracy_NodalLevel.mat');
-writeMat(Energy_Gam_Cognition_Mat, Cognition_Z = Energy_Gam_Cognition[, 1], Cognition_P = Energy_Gam_Cognition[, 2], Cognition_P_FDR = Energy_Gam_Cognition[, 3]);
-print(paste('Resultant file is ', Energy_Gam_Cognition_Mat, sep = ''));
+Energy_Gam_Age_CSV <- file.path(ResultantFolder, 'Energy_Gam_Age_YeoSystemLevel.csv');
+write.csv(Energy_Gam_Age, Energy_Gam_Age_CSV);
+Energy_Gam_Age_Mat <- file.path(ResultantFolder, 'Energy_Gam_Age_YeoSystemLevel.mat');
+writeMat(Energy_Gam_Age_Mat, Age_Z = Energy_Gam_Age_YeoAvg[, 1], Age_P = Energy_Gam_Age_YeoAvg[, 2], Age_P_FDR = Energy_Gam_Age_YeoAvg[, 3]);
 
 ##################################################
 # Cognition effect of energy at Yeo system level #
@@ -156,6 +123,10 @@ for (i in 1:SystemsQuantity)
 }
 Energy_Gam_Cognition_YeoAvg[, 3] <- p.adjust(Energy_Gam_Cognition_YeoAvg[, 2], "fdr");
 print(Energy_Gam_Cognition_YeoAvg);
+Energy_Gam_Cognition_CSV <- file.path(ResultantFolder, 'Energy_Gam_OverallAccuracy_YeoSystemLevel.csv');
+write.csv(Energy_Gam_Cognition_YeoAvg, Energy_Gam_Cognition_CSV);
+Energy_Gam_Cognition_Mat <- file.path(ResultantFolder, 'Energy_Gam_OverallAccuracy_YeoSystemLevel.mat');
+writeMat(Energy_Gam_Cognition_Mat, Cognition_Z = Energy_Gam_Cognition_YeoAvg[, 1], Cognition_P = Energy_Gam_Cognition_YeoAvg[, 2], Cognition_P_FDR = Energy_Gam_Cognition_YeoAvg[, 3]);
 # F1ExecCompResAccuracy
 print('###### F1ExecCompResAccuracy effect of energy at Yeo system level (volNormSC matrix) ######');
 Energy_Gam_Cognition_YeoAvg <- matrix(c(1:SystemsQuantity*3), nrow = SystemsQuantity, ncol = 3, dimnames = list(RowName_Yeo, ColName));
@@ -169,6 +140,29 @@ for (i in 1:SystemsQuantity)
 }
 Energy_Gam_Cognition_YeoAvg[, 3] <- p.adjust(Energy_Gam_Cognition_YeoAvg[, 2], "fdr");
 print(Energy_Gam_Cognition_YeoAvg);
+Energy_Gam_Cognition_CSV <- file.path(ResultantFolder, 'Energy_Gam_F1ExecCompResAccuracy_YeoSystemLevel.csv');
+write.csv(Energy_Gam_Cognition_YeoAvg, Energy_Gam_Cognition_CSV);
+Energy_Gam_Cognition_Mat <- file.path(ResultantFolder, 'Energy_Gam_F1ExecCompResAccuracy_YeoSystemLevel.mat');
+writeMat(Energy_Gam_Cognition_Mat, Cognition_Z = Energy_Gam_Cognition_YeoAvg[, 1], Cognition_P = Energy_Gam_Cognition_YeoAvg[, 2], Cognition_P_FDR = Energy_Gam_Cognition_YeoAvg[, 3]);
+
+# F2SocialCogAccuracy
+print('###### F2SocialCogAccuracy effect of energy at Yeo system level (FA matrix) ######');
+Energy_Gam_Cognition_YeoAvg <- matrix(c(1:SystemsQuantity*3), nrow = SystemsQuantity, ncol = 3, dimnames = list(RowName_Yeo, ColName));
+for (i in 1:SystemsQuantity)
+{
+  tmp_variable <- Energy_YeoAvg[, i];
+  tmp_variable <- tmp_variable[NANIndex];
+  Energy_Gam <- gam(tmp_variable ~ s(Age_years, k=4) + F2SocialCogAccuracy + Sex_factor + HandednessV2 + MotionMeanRelRMS + TBV + Strength_EigNorm_SubIden_Cognition, method = "REML", data = Behavior_New);
+  Energy_Gam_Cognition_YeoAvg[i, 1] <- summary(Energy_Gam)$p.t[2];
+  Energy_Gam_Cognition_YeoAvg[i, 2] <- summary(Energy_Gam)$p.pv[2];
+}
+Energy_Gam_Cognition_YeoAvg[, 3] <- p.adjust(Energy_Gam_Cognition_YeoAvg[, 2], "fdr");
+print(Energy_Gam_Cognition_YeoAvg);
+Energy_Gam_Cognition_CSV <- file.path(ResultantFolder, 'Energy_Gam_F2SocialCogAccuracy_YeoSystemLevel.csv');
+write.csv(Energy_Gam_Cognition_YeoAvg, Energy_Gam_Cognition_CSV);
+Energy_Gam_Cognition_Mat <- file.path(ResultantFolder, 'Energy_Gam_F2SocialCogAccuracy_YeoSystemLevel.mat');
+writeMat(Energy_Gam_Cognition_Mat, Cognition_Z = Energy_Gam_Cognition_YeoAvg[, 1], Cognition_P = Energy_Gam_Cognition_YeoAvg[, 2], Cognition_P_FDR = Energy_Gam_Cognition_YeoAvg[, 3]);
+
 # F3MemoryAccuracy
 print('###### F1MemoryAccuracy effect of energy at Yeo system level (volNormSC matrix) ######');
 Energy_Gam_Cognition_YeoAvg <- matrix(c(1:SystemsQuantity*3), nrow = SystemsQuantity, ncol = 3, dimnames = list(RowName_Yeo, ColName));
@@ -182,3 +176,7 @@ for (i in 1:SystemsQuantity)
 }
 Energy_Gam_Cognition_YeoAvg[, 3] <- p.adjust(Energy_Gam_Cognition_YeoAvg[, 2], "fdr");
 print(Energy_Gam_Cognition_YeoAvg);
+Energy_Gam_Cognition_CSV <- file.path(ResultantFolder, 'Energy_Gam_F3MemoryAccuracy_YeoSystemLevel.csv');
+write.csv(Energy_Gam_Cognition_YeoAvg, Energy_Gam_Cognition_CSV);
+Energy_Gam_Cognition_Mat <- file.path(ResultantFolder, 'Energy_Gam_F3MemoryAccuracy_YeoSystemLevel.mat');
+writeMat(Energy_Gam_Cognition_Mat, Cognition_Z = Energy_Gam_Cognition_YeoAvg[, 1], Cognition_P = Energy_Gam_Cognition_YeoAvg[, 2], Cognition_P_FDR = Energy_Gam_Cognition_YeoAvg[, 3]);
