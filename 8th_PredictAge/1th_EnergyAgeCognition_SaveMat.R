@@ -28,5 +28,7 @@ tmp <- readMat(Activation_Path);
 Activation_Mean <- rowMeans(tmp$Activation.2b0b);
 
 dir.create(paste(ReplicationDataFolder, '/AgePrediction', sep = ''));
-writeMat(paste(ReplicationDataFolder, '/AgePrediction/Energy.mat', sep = ''), Energy = Energy);
-writeMat(paste(ReplicationDataFolder, '/AgePrediction/Behavior.mat', sep = ''), Sex = Sex, Age = Age, HandednessV2 = HandednessV2, MotionMeanRelRMS = MotionMeanRelRMS, TBV = TBV, F1ExecCompResAccuracy = F1ExecCompResAccuracy, Strength_EigNorm_SubIden = Strength_EigNorm_SubIden, Activation_Mean = Activation_Mean);
+dir.create(paste(ReplicationDataFolder, '/AgePrediction/FA_Energy', sep = ''));
+writeMat(paste(ReplicationDataFolder, '/AgePrediction/FA_Energy/Energy.mat', sep = ''), Energy = Energy);
+writeMat(paste(ReplicationDataFolder, '/AgePrediction/FA_Energy/Strength_EigNorm_SubIden.mat', sep = ''), Strength_EigNorm_SubIden = Strength_EigNorm_SubIden);
+writeMat(paste(ReplicationDataFolder, '/AgePrediction/Behavior.mat', sep = ''), Sex = Sex, Age = Age, HandednessV2 = HandednessV2, MotionMeanRelRMS = MotionMeanRelRMS, TBV = TBV, F1ExecCompResAccuracy = F1ExecCompResAccuracy, Activation_Mean = Activation_Mean);

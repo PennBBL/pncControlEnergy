@@ -5,7 +5,7 @@ library(visreg);
 library(ggplot2);
 
 ReplicationFolder <- '/data/jux/BBL/projects/pncControlEnergy/results/Replication';
-AgePrediction_ResFolder <- paste(ReplicationFolder, '/results/FA_Energy/Age_Prediction', sep = '');
+AgePrediction_ResFolder <- paste(ReplicationFolder, '/results/volNormSC_Energy/Age_Prediction', sep = '');
 Prediction_Sample2 <- readMat(paste(AgePrediction_ResFolder, '/Sample1_Predict_Sample2/APredictB.mat', sep = ''));
 Prediction_Sample1 <- readMat(paste(AgePrediction_ResFolder, '/Sample2_Predict_Sample1/APredictB.mat', sep = ''));
 PredictionError_Sample2 <- Prediction_Sample2$Predict.Score - Prediction_Sample2$Test.Score;
@@ -25,7 +25,7 @@ HandednessV2 <- Behavior$HandednessV2[SampleIndex_All];
 MotionMeanRelRMS <- Behavior$MotionMeanRelRMS[SampleIndex_All];
 TBV <- Behavior$TBV[SampleIndex_All];
 Activation_Mean <- Behavior$Activation.Mean[SampleIndex_All];
-StrengthData <- readMat(paste(AgePrediction_DataFolder, '/FA_Energy/Strength_EigNorm_SubIden.mat', sep = ''));
+StrengthData <- readMat(paste(AgePrediction_DataFolder, '/volNormSC_Energy/Strength_EigNorm_SubIden.mat', sep = ''));
 Strength_EigNorm_SubIden <- StrengthData$Strength.EigNorm.SubIden[SampleIndex_All];
 
 NonNAN_Index <- which(!is.na(F1ExecCompResAccuracy));
@@ -43,5 +43,5 @@ Gam_Model <- gam(PredictionError ~ F1ExecCompResAccuracy_New + s(Age_New, k=4) +
 Fig <- visreg(Gam_Model, 'F1ExecCompResAccuracy_New', xlab = 'Executive Function', ylab = 'Prediction Error', line.par = list(col = "#000000"), gg = TRUE);
 Fig <- Fig + theme_classic() + theme(axis.text=element_text(size=27, color='black'), axis.title=element_text(size=30));
 Fig + geom_point(size = 1.5);
-ggsave('/data/jux/BBL/projects/pncControlEnergy/scripts/PlotResults/FA_Network/AgePrediction_Error_Cognition.pdf', width = 15, height = 15, dpi = 300, units = "cm");
-ggsave('/data/jux/BBL/projects/pncControlEnergy/scripts/PlotResults/FA_Network/AgePrediction_Error_Cognition.tiff', width = 15, height = 15, dpi = 300, units = "cm");
+ggsave('/data/jux/BBL/projects/pncControlEnergy/scripts/PlotResults/volNormSC_Network/AgePrediction_Error_Cognition.pdf', width = 15, height = 15, dpi = 300, units = "cm");
+ggsave('/data/jux/BBL/projects/pncControlEnergy/scripts/PlotResults/volNormSC_Network/AgePrediction_Error_Cognition.tiff', width = 15, height = 15, dpi = 300, units = "cm");

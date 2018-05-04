@@ -1,5 +1,5 @@
 
-PredictionResultsFolder = '/data/jux/BBL/projects/pncControlEnergy/results/Replication/results/FA_Energy/Age_Prediction';
+PredictionResultsFolder = '/data/jux/BBL/projects/pncControlEnergy/results/Replication/results/volNormSC_Energy/Age_Prediction';
 PredictionDataFolder = '/data/jux/BBL/projects/pncControlEnergy/results/Replication/data/AgePrediction';
 BehaviorMat = [PredictionDataFolder '/Behavior.mat'];
 SampleIndexMat = [PredictionDataFolder '/SampleIndex_SplitHalf.mat'];
@@ -27,7 +27,7 @@ Handedness = Behavior.HandednessV2(Sample2_Index);
 TBV = Behavior.TBV(Sample2_Index);
 Motion = Behavior.MotionMeanRelRMS(Sample2_Index);
 Activation_Mean = Behavior.Activation_Mean(Sample2_Index); 
-StrengthData = load([PredictionDataFolder '/FA_Energy/Strength_EigNorm_SubIden.mat']);
+StrengthData = load([PredictionDataFolder '/volNormSC_Energy/Strength_EigNorm_SubIden.mat']);
 Strength = StrengthData.Strength_EigNorm_SubIden(Sample2_Index);
 [partialR, P] = partialcorr(double(Test_Score'), double(Predict_Score'), [TBV Strength Motion double(Handedness) double(Sex) Strength]);
 

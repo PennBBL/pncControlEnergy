@@ -32,10 +32,10 @@ pipeline.(Job_Name).command = 'ControlMerge_Function(files_in, files_out{1})';
 pipeline.(Job_Name).files_out{1} = ResultantFile;
 
 psom_gb_vars
-Pipeline_opt.mode = 'qsub';
+Pipeline_opt.mode = 'batch';
 Pipeline_opt.qsub_options = '-q all.q';
 Pipeline_opt.mode_pipeline_manager = 'batch';
-Pipeline_opt.max_queued = 1000;
+Pipeline_opt.max_queued = 6;
 Pipeline_opt.flag_verbose = 1;
 Pipeline_opt.flag_pause = 1;
 Pipeline_opt.path_logs = [FA_ResultantFolder '/logs'];
